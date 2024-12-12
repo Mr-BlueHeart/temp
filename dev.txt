@@ -1,0 +1,2459 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : av_test
+ Source Server Type    : MySQL
+ Source Server Version : 50732
+ Source Host           : 47.241.189.151:26034
+ Source Schema         : dev
+
+ Target Server Type    : MySQL
+ Target Server Version : 50732
+ File Encoding         : 65001
+
+ Date: 12/12/2024 10:38:35
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for admin_order_operate
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_order_operate`;
+CREATE TABLE `admin_order_operate`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单编号',
+  `operate_user_Id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作用户id',
+  `remark` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '备注',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `order_id`(`order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后台订单操作表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for admin_user
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_user`;
+CREATE TABLE `admin_user`  (
+  `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `login_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录账号',
+  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '用户昵称',
+  `user_type` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '00' COMMENT '用户类型（00管理员 01只读）',
+  `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '用户邮箱',
+  `phonenumber` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '手机号码',
+  `sex` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '用户性别（0男 1女 2未知）',
+  `avatar` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '头像路径',
+  `password` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '密码',
+  `salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '盐加密',
+  `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
+  `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
+  `login_ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '最后登陆IP',
+  `login_date` datetime NULL DEFAULT NULL COMMENT '最后登陆时间',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`user_id`) USING BTREE,
+  UNIQUE INDEX `login_name`(`login_name`) USING BTREE,
+  UNIQUE INDEX `email`(`email`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '管理员用户信息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_cm_account
+-- ----------------------------
+DROP TABLE IF EXISTS `api_cm_account`;
+CREATE TABLE `api_cm_account`  (
+  `api_cm_account_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
+  `quota` int(8) NULL DEFAULT NULL COMMENT '可用额度',
+  `start_time` datetime NULL DEFAULT NULL COMMENT '开始日期',
+  `end_time` datetime NULL DEFAULT NULL COMMENT '截止日期',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改日期',
+  `update_by` bigint(20) NULL DEFAULT NULL COMMENT '修改人',
+  `used_quota` int(8) NULL DEFAULT 0 COMMENT '已使用额度次数',
+  `cycle_date` int(11) NULL DEFAULT NULL COMMENT '总周期',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `total_quota` int(8) NULL DEFAULT NULL COMMENT '总额度次数',
+  `create_by` bigint(255) NULL DEFAULT NULL COMMENT '创建人',
+  `isEnable` int(8) NULL DEFAULT NULL COMMENT '是否启用：0-已启用；1：未启用',
+  `is_api` int(8) NULL DEFAULT 0 COMMENT '0 是api 1 是portal',
+  PRIMARY KEY (`api_cm_account_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '监控订单账户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for api_cm_account_record
+-- ----------------------------
+DROP TABLE IF EXISTS `api_cm_account_record`;
+CREATE TABLE `api_cm_account_record`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `quota` int(8) NULL DEFAULT NULL COMMENT '可用额度',
+  `start_time` datetime NULL DEFAULT NULL COMMENT '开始日期',
+  `end_time` datetime NULL DEFAULT NULL COMMENT '截止日期',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改日期',
+  `update_by` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '修改人',
+  `used_quota` int(8) NULL DEFAULT 0 COMMENT '已使用额度次数',
+  `cycle_date` int(11) NULL DEFAULT NULL COMMENT '总周期',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `total_quota` int(8) NULL DEFAULT NULL COMMENT '总额度次数',
+  `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `isEnable` int(8) NULL DEFAULT NULL COMMENT '是否启用：0-已启用；1：未启用',
+  `is_api` int(8) NULL DEFAULT 0 COMMENT '0 是 api 1 是portal',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 68 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '监控订单账户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for api_cm_order
+-- ----------------------------
+DROP TABLE IF EXISTS `api_cm_order`;
+CREATE TABLE `api_cm_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `api_id` bigint(11) NULL DEFAULT NULL COMMENT '接口ID',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家ID',
+  `request_id` bigint(20) NULL DEFAULT NULL COMMENT '请求ID',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单ID',
+  `order_status` int(11) NULL DEFAULT NULL COMMENT '订单状态（创建-200001，取消-200009，持续监控中，已完成-200004）',
+  `company_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司代码',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `monitoring_cycle` int(11) NULL DEFAULT NULL COMMENT '监控周期，支持7/14/30天',
+  `notify_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调地址',
+  `cron_str` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '定时任务表达式',
+  `notify_times` int(11) NULL DEFAULT 0 COMMENT '回调次数',
+  `init_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '原始数据',
+  `content` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '返回数据',
+  `last_time` datetime NULL DEFAULT NULL COMMENT '上一次执行时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `notify_status` int(11) NULL DEFAULT NULL COMMENT '订单状态（0-成功；1-失败；null-未变化不用通知）',
+  `is_api` int(8) NULL DEFAULT 0 COMMENT '0 是 api 1是 portal',
+  `av_cm_order_id` varbinary(255) NULL DEFAULT NULL COMMENT 'portal cm 订单号',
+  PRIMARY KEY (`id`, `order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 581 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '监控订单表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for api_cm_order_record
+-- ----------------------------
+DROP TABLE IF EXISTS `api_cm_order_record`;
+CREATE TABLE `api_cm_order_record`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `api_id` bigint(11) NULL DEFAULT NULL COMMENT '接口ID',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家ID',
+  `request_id` bigint(20) NULL DEFAULT NULL COMMENT '请求ID',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单ID',
+  `order_status` int(255) NULL DEFAULT NULL COMMENT '订单状态（创建，取消，持续监控中，已完成）',
+  `company_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司代码',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `monitoring_cycle` int(11) NULL DEFAULT NULL COMMENT '监控周期，支持7/14/30天',
+  `notify_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调地址',
+  `cron_str` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '定时任务表达式',
+  `notify_times` int(11) NULL DEFAULT 0 COMMENT '回调次数',
+  `init_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '原始数据',
+  `content` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '返回数据',
+  `last_time` datetime NULL DEFAULT NULL COMMENT '上一次执行时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `notify_status` int(255) NULL DEFAULT NULL COMMENT '订单状态（创建，取消，持续监控中，已完成）',
+  `is_api` int(8) NULL DEFAULT 0 COMMENT '0是 api 1是 portal',
+  PRIMARY KEY (`id`, `order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 14790 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '监控订单记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for api_company_document
+-- ----------------------------
+DROP TABLE IF EXISTS `api_company_document`;
+CREATE TABLE `api_company_document`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `key_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '业务唯一标识',
+  `company_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司编号',
+  `doc_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件ID',
+  `doc_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `price` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '价格',
+  `page` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件页数',
+  `size` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件大小',
+  `date` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '时间',
+  `onsite_revCode` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件地址',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  `bulky` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `docSize` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '公司文件表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_country
+-- ----------------------------
+DROP TABLE IF EXISTS `api_country`;
+CREATE TABLE `api_country`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `isEnable` tinyint(11) NULL DEFAULT NULL,
+  `create_time` datetime NOT NULL,
+  `simple_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家简称',
+  `language_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '语言类型 single double',
+  `national_flag_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国旗地址',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 405 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_data_config
+-- ----------------------------
+DROP TABLE IF EXISTS `api_data_config`;
+CREATE TABLE `api_data_config`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源id',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家id',
+  `api_id` int(11) NULL DEFAULT NULL COMMENT '接口id',
+  `column_value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '三方数据源key',
+  `column_value_type` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字段类型，0={\'a\':K},1={\'a\':{}}，2={\'a\':[]}',
+  `parent_id` int(11) NULL DEFAULT NULL COMMENT '父节点id',
+  `isEnable` tinyint(255) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `source_api_id` int(11) NULL DEFAULT NULL COMMENT '数据源接口id',
+  `column_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'api输出映射key',
+  `column_remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字段解释',
+  `threshold` decimal(5, 2) NULL DEFAULT NULL COMMENT '置信度阈值',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6051 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '清洗字段配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_data_source
+-- ----------------------------
+DROP TABLE IF EXISTS `api_data_source`;
+CREATE TABLE `api_data_source`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源名称',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家id',
+  `isEnable` tinyint(11) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `create_time` datetime NOT NULL,
+  `source_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源标识',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据源配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_data_source_config
+-- ----------------------------
+DROP TABLE IF EXISTS `api_data_source_config`;
+CREATE TABLE `api_data_source_config`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_id` int(11) NULL DEFAULT NULL COMMENT '数据源id\r\n1:中国\r\n2：台湾\r\n3：日本',
+  `interface_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口名称',
+  `interface_url` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT '接口地址',
+  `interface_key` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT '接口标识',
+  `interface_source_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口源',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据源接口配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_info
+-- ----------------------------
+DROP TABLE IF EXISTS `api_info`;
+CREATE TABLE `api_info`  (
+  `api_id` int(11) NOT NULL AUTO_INCREMENT,
+  `module_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口名称\r\n1.GovernmentId -  govId1/1.0\r\n2.DriverLicense    driverLicense/1.0\r\n3.Telecom    telecom1/1.0\r\n4.Passport    passport/1.0\r\n5.BankThree   bank1/1.0\r\n6.TelecomLv    /telecomCredit/1.0\r\n7.TelecomStp   /telecomSuspension/1.0\r\n8.Telecom2e   /telecom2/1.0\r\n9.TelephoneBlank  /telecomStatus/1.0\r\n10.TelephoneNetworkTime   /telecomUsage/1.0',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家id',
+  `source_id` int(11) NULL DEFAULT NULL COMMENT '数据源id',
+  `isEnable` tinyint(11) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `module_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口标识',
+  PRIMARY KEY (`api_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 170 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_init_data
+-- ----------------------------
+DROP TABLE IF EXISTS `api_init_data`;
+CREATE TABLE `api_init_data`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单id',
+  `source_id` int(255) NULL DEFAULT NULL COMMENT '数据源id',
+  `api_id` int(255) NULL DEFAULT NULL,
+  `isEnable` int(255) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `create_time` datetime NOT NULL,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '输出内容',
+  `req_param_json` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '请求参数',
+  `param_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `order`(`order_id`) USING BTREE,
+  INDEX `sourceId`(`source_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 387480 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API原始数据表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_mv_init
+-- ----------------------------
+DROP TABLE IF EXISTS `api_mv_init`;
+CREATE TABLE `api_mv_init`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单id',
+  `init_order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调url',
+  `order_status` tinyint(11) NULL DEFAULT NULL COMMENT '0：同步\r\n1：异步 2:KYC-同步 5:package 6:file',
+  `status` int(11) NULL DEFAULT NULL COMMENT '0：成功\r\n1：失败\r\n2：数据为空（KYC无此状态）3：正在进行中',
+  `content` mediumblob NULL COMMENT '回调url',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `company_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口地址',
+  `order_source` tinyint(11) NULL DEFAULT NULL COMMENT '0：API 1：平台',
+  `order_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '0:KYB 1:UBO',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  `source_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `source_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `source_req` mediumblob NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `orderid`(`order_id`) USING BTREE,
+  INDEX `initOrderId`(`init_order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_order
+-- ----------------------------
+DROP TABLE IF EXISTS `api_order`;
+CREATE TABLE `api_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id',
+  `api_id` int(11) NULL DEFAULT NULL COMMENT '接口id',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家id',
+  `request_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '业务id',
+  `status` int(11) NULL DEFAULT NULL COMMENT '0：成功\r\n1：失败\r\n2：数据为空（KYC无此状态）',
+  `isEnable` tinyint(11) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `create_time` datetime NOT NULL,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单id',
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '输出内容',
+  `trans_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '翻译内容',
+  `is_auto` tinyint(11) NULL DEFAULT NULL COMMENT '0：人工 1：非人工自动化',
+  `notify_status` tinyint(11) NULL DEFAULT NULL COMMENT 'KYB:\r\n0:创建\r\n1：处理中\r\n2：回调超时\r\n3：已完成（同步，成功返回数据）\r\n4：回调成功（异步，成功返回数据）\r\n5：失败(数据源异常和系统异常)\r\nKYC：\r\n0:创建\r\n1：处理中\r\n6：订单完成，返回校验数据\r\n7：订单完成，没有返回正确结果（utv）\r\n8：数据源异常或者系统异常',
+  `template_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '模板唯一标识',
+  `update_time` datetime NULL DEFAULT NULL,
+  `order_status` tinyint(11) NULL DEFAULT NULL COMMENT '0：同步\r\n1：异步 2:KYC-同步 5:package 6:file',
+  `notify_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调url',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `trans_company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '翻译后公司名称',
+  `mock_status` tinyint(11) NULL DEFAULT 0 COMMENT '0：生产\r\n1：mock',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `status_notify`(`notify_status`) USING BTREE,
+  INDEX `order_id`(`order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 251135 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_order_record
+-- ----------------------------
+DROP TABLE IF EXISTS `api_order_record`;
+CREATE TABLE `api_order_record`  (
+  `api_order_record_id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NULL DEFAULT NULL,
+  `pay_type` tinyint(11) NULL DEFAULT NULL COMMENT '0:预付1:后付)',
+  `notify_status` tinyint(11) NULL DEFAULT NULL COMMENT 'KYB:\r\n0:创建\r\n1：处理中\r\n2：回调超时\r\n3：已完成（同步，成功返回数据）\r\n4：回调成功（异步，成功返回数据）\r\n5：失败(数据源异常和系统异常)\r\nKYC：\r\n0:创建\r\n1：处理中\r\n6：订单完成，返回校验数据\r\n7：订单完成，没有返回正确结果（utv）\r\n8：数据源异常或者系统异常',
+  `create_time` datetime NOT NULL,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单id',
+  `error_message` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '错误信息',
+  `ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'ip',
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id',
+  `pay_way` tinyint(11) NULL DEFAULT NULL COMMENT '支付方式',
+  `status` tinyint(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`api_order_record_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_order_source
+-- ----------------------------
+DROP TABLE IF EXISTS `api_order_source`;
+CREATE TABLE `api_order_source`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'api_order表订单编号',
+  `source_request_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源订单编号',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家编号',
+  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '价格',
+  `doc_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件id',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  `file_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '源端文件地址',
+  `company_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司编码',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单拓展表_数据源信息' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_product_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `api_product_dict`;
+CREATE TABLE `api_product_dict`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '系统id 主键',
+  `product_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'api产品名称',
+  `product_type` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'api产品分类 0：KYB 1：KYC\n  2：Unified API',
+  `isEnable` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据状态 0：有效 1：失效',
+  `template_name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模板名称',
+  `api_id` bigint(20) NULL DEFAULT NULL COMMENT '接口id',
+  `country_id` bigint(20) NULL DEFAULT NULL COMMENT '公司id',
+  `template_key` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模板key',
+  `type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口类型',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 178 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for api_template_config
+-- ----------------------------
+DROP TABLE IF EXISTS `api_template_config`;
+CREATE TABLE `api_template_config`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户id',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家id',
+  `api_id` int(11) NULL DEFAULT NULL COMMENT '接口id',
+  `isStandard` tinyint(11) NULL DEFAULT NULL COMMENT '是否标准模板',
+  `template_artificial` tinyint(11) NULL DEFAULT NULL COMMENT '0:非人工 1：人工',
+  `isEnable` tinyint(11) NULL DEFAULT NULL COMMENT '0:有效1：无效',
+  `create_time` datetime NOT NULL,
+  `codition_ids` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '配置项ids',
+  `codition_type` tinyint(11) NOT NULL DEFAULT 0 COMMENT '配置类型(0-数据源字段id    1-apiId)',
+  `level` tinyint(11) NOT NULL DEFAULT 0 COMMENT '模板级别(0-顶级模板 1-子级模板)',
+  `update_time` datetime NOT NULL,
+  `template_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模板唯一标识',
+  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '模板价格',
+  `user_template_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户模板key',
+  `data_source_config_id` int(11) NULL DEFAULT NULL COMMENT 'api_source_config_id 表中的ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1457 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'templateKey命名规则：user_template_key + 以下命名规则\r\n1、注册信息-Registration\r\n2、主要人员-Management\r\n3、股东信息-Shareholder\r\n4、行政处罚-Penalty\r\n5、异常经营-Operation\r\n6、严重风险-Irregularity\r\n7、股权出质-Pledged\r\n8、法院记录-Court\r\n9、法律诉讼-Law\r\n10、最终受益人-UBO' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_ubo_init
+-- ----------------------------
+DROP TABLE IF EXISTS `api_ubo_init`;
+CREATE TABLE `api_ubo_init`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` int(11) NULL DEFAULT NULL COMMENT '0：成功\r\n1：失败\r\n2：数据为空（KYC无此状态）',
+  `isEnable` tinyint(11) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `create_time` datetime NOT NULL,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单id',
+  `update_time` datetime NULL DEFAULT NULL,
+  `order_status` tinyint(11) NULL DEFAULT NULL COMMENT '0：同步\r\n1：异步 2:KYC-同步 5:package 6:file',
+  `init_order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调url',
+  `order_source` tinyint(11) NULL DEFAULT NULL COMMENT '0：API 1：平台',
+  `content` mediumblob NULL COMMENT '回调url',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口地址',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `company_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口地址',
+  `req_params` mediumblob NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `orderid`(`order_id`) USING BTREE,
+  INDEX `initOrderId`(`init_order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_ubo_order
+-- ----------------------------
+DROP TABLE IF EXISTS `api_ubo_order`;
+CREATE TABLE `api_ubo_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id',
+  `api_id` int(11) NULL DEFAULT NULL COMMENT '接口id',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家id',
+  `request_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '业务id',
+  `status` int(11) NULL DEFAULT NULL COMMENT '0：成功\r\n1：失败\r\n2：数据为空',
+  `isEnable` tinyint(11) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `create_time` datetime NOT NULL,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单id',
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '输出内容',
+  `is_auto` tinyint(11) NULL DEFAULT NULL COMMENT '0：人工 1：非人工自动化\r\n（暂时没用到）',
+  `notify_status` tinyint(11) NULL DEFAULT NULL COMMENT '\r\n0:创建\r\n1：处理中\r\n2：回调超时\r\n3：已完成（同步，成功返回数据）\r\n4：回调成功（异步，成功返回数据）\r\n5：失败(数据源异常和系统异常)\r\n',
+  `template_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模板唯一标识',
+  `update_time` datetime NULL DEFAULT NULL,
+  `order_status` int(100) NULL DEFAULT NULL COMMENT '创建：200001\r\n完成：200004\r\n回调成功：200005\r\n回调失败 200006',
+  `notify_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调url',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称（暂时没用到）',
+  `trans_company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '翻译后公司名称（暂时没用到）',
+  `mock_status` tinyint(11) NULL DEFAULT 0 COMMENT '0：生产\r\n1：mock',
+  `threshold` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '阀值',
+  `layers` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '层级',
+  `realtime_flag` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '实时：true\r\n缓存：false',
+  `cache_period` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '缓存天数',
+  `company_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司注册号',
+  `explore_count` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '穿透股东数量',
+  `cross_country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '穿透股东数量',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `order_id`(`order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for api_user_product
+-- ----------------------------
+DROP TABLE IF EXISTS `api_user_product`;
+CREATE TABLE `api_user_product`  (
+  `id` bigint(20) NOT NULL COMMENT '主键id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `product_id` bigint(20) NULL DEFAULT NULL COMMENT '产品id',
+  `product_name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品名称',
+  `api_id` bigint(20) NULL DEFAULT NULL COMMENT 'api接口id',
+  `country_id` bigint(20) NULL DEFAULT NULL COMMENT '公司id',
+  `user_template` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '访问接口所使用的模板\n',
+  `createTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updateTime` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `isEnable` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '数据状态 0：有效 1：失效',
+  `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '产品可用状态 0：可用 1：不可用',
+  `sort` int(11) NULL DEFAULT NULL COMMENT '产品排序',
+  `product_dict_type` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'api产品分类0：KYB 1：KYC 2：Unified API',
+  `isMock` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '0:生产1:mock',
+  `isEdit` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '是否允许修改，1是，0否',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for api_user_templatekey
+-- ----------------------------
+DROP TABLE IF EXISTS `api_user_templatekey`;
+CREATE TABLE `api_user_templatekey`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口名称',
+  `user_templateKey` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家id',
+  `template_keys` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源id',
+  `isEnable` tinyint(11) NULL DEFAULT NULL COMMENT '0:有效1:无效',
+  `isMock` tinyint(11) NULL DEFAULT NULL COMMENT '0:生产1:mock',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1412 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_aml_order
+-- ----------------------------
+DROP TABLE IF EXISTS `av_aml_order`;
+CREATE TABLE `av_aml_order`  (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `api_id` bigint(11) NULL DEFAULT NULL COMMENT '接口ID',
+  `request_id` bigint(20) NULL DEFAULT NULL COMMENT '请求ID',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'av_orders',
+  `param_value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '入参数据',
+  `pay_status` int(8) NOT NULL DEFAULT 0 COMMENT '支付状态 0 是未支付 1 是已支付',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `is_delete` int(8) NULL DEFAULT 0 COMMENT '是否删除 0是未删除 1是删除',
+  `is_enable` int(8) NULL DEFAULT 0 COMMENT '0 启用 1禁用',
+  `type` int(8) NULL DEFAULT 1 COMMENT '1 主要人员 2股东人员 3股东公司 4当前公司',
+  `package_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `total_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '总价',
+  `create_type` int(8) NOT NULL DEFAULT 0 COMMENT '创建类型 1 是更新 0是创建',
+  `pay_method` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '支付方法',
+  `order_type` int(8) NOT NULL DEFAULT 0 COMMENT '0 是正常订单 1是多笔订单支付时创建的临时订单',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '个人名称',
+  `first_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `last_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exact_match` int(8) NULL DEFAULT 0 COMMENT '0 false 1true',
+  `match_rate` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `middle_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `original_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `birth` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '生日',
+  `gender` int(8) NULL DEFAULT NULL COMMENT '性别 0 男 1女 2是未选择',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `is_new` int(8) NOT NULL DEFAULT 0 COMMENT '0 是最新的 \r\n1 是历史数据',
+  `is_new_flag` int(8) NOT NULL DEFAULT 0 COMMENT '0 已读 1是未读',
+  `ubo_node` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'ubo 节点信息',
+  `position` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职位信息（ubo主要人员重复  职位不同）',
+  `company_name_en` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'en 英文名称',
+  `company_status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司的状态',
+  `en_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '个人name 英文',
+  `order_number` varbinary(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'AML订单表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_aml_order_record
+-- ----------------------------
+DROP TABLE IF EXISTS `av_aml_order_record`;
+CREATE TABLE `av_aml_order_record`  (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `api_id` bigint(11) NULL DEFAULT NULL COMMENT '接口ID',
+  `request_id` bigint(20) NULL DEFAULT NULL COMMENT '请求ID',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'av_orders',
+  `param_value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '入参数据',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '本次数据',
+  `init_data` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '原始数据',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `is_delete` int(8) NULL DEFAULT 0 COMMENT '是否删除 0是未删除 1是删除',
+  `is_enable` int(8) NULL DEFAULT 0 COMMENT '0 启用 1禁用',
+  `type` int(8) NULL DEFAULT 0 COMMENT '0 个人 1公司',
+  `package_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `create_type` int(8) NOT NULL DEFAULT 0 COMMENT '0 是创建 1是更新',
+  `aml_order_id` bigint(20) NULL DEFAULT NULL COMMENT 'aml 订单id',
+  `is_ok` int(8) NOT NULL DEFAULT 0 COMMENT '0 是请求数据源成功 1是失败',
+  PRIMARY KEY (`id`, `order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'AML订单表详情表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_cm_order
+-- ----------------------------
+DROP TABLE IF EXISTS `av_cm_order`;
+CREATE TABLE `av_cm_order`  (
+  `id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `api_id` bigint(11) NULL DEFAULT NULL COMMENT '接口ID',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家ID',
+  `request_id` bigint(20) NULL DEFAULT NULL COMMENT '请求ID',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'av_orders 创建持续监控订单ID',
+  `api_order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'api持续监控 订单ID',
+  `order_status` int(255) NULL DEFAULT NULL COMMENT '订单状态（创建-200001，取消-200009，持续监控中，已完成-200004）',
+  `company_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司代码',
+  `company_name_og` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `monitoring_cycle` int(11) NULL DEFAULT NULL COMMENT '监控周期，支持7/14/30天',
+  `change_count` int(11) NULL DEFAULT NULL COMMENT '改变维度',
+  `last_time` datetime NULL DEFAULT NULL COMMENT '上一次执行时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `change_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '更改内容',
+  `is_delete` int(8) NULL DEFAULT 0 COMMENT '是否删除 0是未删除 1是删除',
+  `is_enable` int(8) NULL DEFAULT 0 COMMENT '0 启用 1禁用',
+  `company_name_en` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司英文名称',
+  `check_type` int(8) NULL DEFAULT NULL,
+  `check_field` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `is_send_email` int(255) NULL DEFAULT 0 COMMENT '邮件通知 0 是未通知 1是已通知',
+  `package_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `update_order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新状态的kyb订单id',
+  PRIMARY KEY (`id`, `order_id`) USING BTREE,
+  INDEX `index_name`(`company_number`, `country_id`, `order_status`) USING BTREE,
+  INDEX `user_id`(`user_id`, `is_delete`, `order_status`, `country_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '监控订单记录表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_cm_order_record
+-- ----------------------------
+DROP TABLE IF EXISTS `av_cm_order_record`;
+CREATE TABLE `av_cm_order_record`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `api_id` bigint(11) NULL DEFAULT NULL COMMENT '接口ID',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家ID',
+  `request_id` bigint(20) NULL DEFAULT NULL COMMENT '请求ID 和 api record 表数据 requestId',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'av_orders 订单ID',
+  `api_order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'api持续监控 订单ID',
+  `order_status` int(255) NULL DEFAULT NULL COMMENT '订单状态（创建，取消，持续监控中，已完成）',
+  `company_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司代码',
+  `company_name_og` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `monitoring_cycle` int(11) NULL DEFAULT NULL COMMENT '监控周期，支持7/14/30天',
+  `change_count` int(11) NULL DEFAULT NULL COMMENT '改变维度',
+  `last_time` datetime NULL DEFAULT NULL COMMENT '上一次执行时间',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `is_send_email` int(255) NULL DEFAULT NULL COMMENT '邮件通知 0 是未通知 1已通知',
+  `is_show` int(8) NULL DEFAULT 0 COMMENT '是否显示 0是显示 1是显示',
+  `change_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '更改内容',
+  `is_delete` int(8) NULL DEFAULT 0 COMMENT '是否删除 0是未删除 1是删除',
+  `is_enable` int(8) NULL DEFAULT 0 COMMENT '0 启用 1禁用',
+  `company_name_en` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司英文名称',
+  PRIMARY KEY (`id`, `order_id`) USING BTREE,
+  INDEX `selectAll`(`api_order_id`, `is_show`, `is_enable`, `is_delete`) USING BTREE COMMENT '查询展示详情（主要会用到）'
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '监控订单记录表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_company_info
+-- ----------------------------
+DROP TABLE IF EXISTS `av_company_info`;
+CREATE TABLE `av_company_info`  (
+  `id` bigint(20) NOT NULL,
+  `order_id` bigint(20) NULL DEFAULT NULL,
+  `user_id` bigint(20) NULL DEFAULT NULL,
+  `company_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `info_category` int(11) NULL DEFAULT NULL COMMENT '1基本信息；\n2股东信息;\n3曾用名信息;\n4行政处罚；\n5经营异常；\n6严重违法;\n7股权出质\n8法院记录；\n9被执行信息;\r\n104：破产重整 ，105：企查查ubo \r\n106:kyb_ubo\r\n999:HKG独有,获取QCC订单编号（根据订单号获取Basic信息）',
+  `info` json NULL,
+  `info_en` json NULL,
+  `created_time` datetime NULL DEFAULT NULL,
+  `delete_flag` int(11) NULL DEFAULT NULL,
+  `remark` json NULL,
+  `company_name_english` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称英文',
+  `init_info_en` json NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `index_order`(`order_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_country
+-- ----------------------------
+DROP TABLE IF EXISTS `av_country`;
+CREATE TABLE `av_country`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `iso_2` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'iso2',
+  `iso_3` varchar(3) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'iso3',
+  `numeric_code` int(11) NULL DEFAULT NULL COMMENT 'numeric code',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 250 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '国家名称缩写表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for av_feedback
+-- ----------------------------
+DROP TABLE IF EXISTS `av_feedback`;
+CREATE TABLE `av_feedback`  (
+  `id` bigint(20) NOT NULL,
+  `user_need` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户需求项',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `note` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `email` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `mobile` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `company_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_time` datetime NULL DEFAULT NULL,
+  `delete_flag` int(11) NULL DEFAULT NULL,
+  `remark` json NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户反馈信息' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_legaldoc_order
+-- ----------------------------
+DROP TABLE IF EXISTS `av_legaldoc_order`;
+CREATE TABLE `av_legaldoc_order`  (
+  `id` bigint(20) NOT NULL,
+  `user_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `api_id` bigint(11) NULL DEFAULT NULL COMMENT '接口ID',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `company_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '公司的number',
+  `request_id` bigint(20) NULL DEFAULT NULL COMMENT '请求ID',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'av 创建持续ID',
+  `doc_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '返回的ID',
+  `order_rno` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'cr返回的订单ID',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文档名称',
+  `year` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '年份',
+  `pages` int(11) NULL DEFAULT NULL COMMENT '页数',
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态1 是',
+  `date` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '时间',
+  `file_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件地址',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `is_delete` int(8) NULL DEFAULT 0 COMMENT '是否删除 0是未删除 1是删除',
+  `is_enable` int(8) NULL DEFAULT 0 COMMENT '0 启用 1禁用',
+  `callback_status` int(8) NULL DEFAULT 0 COMMENT '0 初始状态\r\n1 创建（cr 下单）成功\r\n2 支付成功回调\r\n3  其他失败 \r\n4  余额不足支付失败 \r\n5 获取文件地址回调成功\r\n6 获取文件重试15 \r\n7 创建（cr下单）失败\r\n8 命中 DC',
+  `price` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '价格',
+  `size` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件大小',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `order_id_index`(`order_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_national_flag
+-- ----------------------------
+DROP TABLE IF EXISTS `av_national_flag`;
+CREATE TABLE `av_national_flag`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `og_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '中文名称',
+  `en_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '英文名称',
+  `img_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片名称',
+  `two_character_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '二字码',
+  `three_character_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '三字码',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ogname`(`og_name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 222 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '国旗存储表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for av_order_source
+-- ----------------------------
+DROP TABLE IF EXISTS `av_order_source`;
+CREATE TABLE `av_order_source`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'api_order表订单编号',
+  `source_request_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源订单编号',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家编号',
+  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '价格',
+  `doc_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件id',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  `file_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '源端文件地址',
+  `company_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司编码',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单拓展表_数据源信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for av_order_ubo_drilling
+-- ----------------------------
+DROP TABLE IF EXISTS `av_order_ubo_drilling`;
+CREATE TABLE `av_order_ubo_drilling`  (
+  `order_id` bigint(20) NOT NULL COMMENT '子订单id',
+  `parent_order_id` bigint(20) NULL DEFAULT NULL COMMENT '父订单id',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `report_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告类型,与订单中保持一直',
+  `threshold` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `layers` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `cachePeriod` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `realtimeFlag` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `jurisdiction` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`order_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for av_orders
+-- ----------------------------
+DROP TABLE IF EXISTS `av_orders`;
+CREATE TABLE `av_orders`  (
+  `order_id` bigint(20) NOT NULL,
+  `order_number` varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `order_type` int(255) NULL DEFAULT NULL COMMENT '0企业核查；1个人核查;2KYC；3协议套餐\n\n\n99:父订单',
+  `report_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '报告类型：基础报告，高级报告',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '查询的企业名称',
+  `total_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '总价',
+  `candidate_amount` int(11) NULL DEFAULT NULL COMMENT '候选人数量',
+  `payment_time` datetime NULL DEFAULT NULL,
+  `payment_state` int(11) NULL DEFAULT NULL COMMENT '0未支付；1已支付',
+  `order_state` int(1) NULL DEFAULT NULL COMMENT '0未支付；1进行中；2已完成；99已取消',
+  `package_id` bigint(20) NULL DEFAULT NULL,
+  `pay_method` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `call_back_time` datetime NULL DEFAULT NULL COMMENT 'paypal回调时间',
+  `delete_flag` int(11) NULL DEFAULT NULL,
+  `order_goods` json NULL COMMENT '订单包含的服务',
+  `created_id` bigint(20) NULL DEFAULT NULL,
+  `created_time` datetime NULL DEFAULT NULL COMMENT '下单时间',
+  `remark` json NULL COMMENT '支付回调',
+  `report_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `batch_id` bigint(20) NULL DEFAULT NULL COMMENT '购物车批量ID 也有可能是一个',
+  `company_name_english` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业名称 英文',
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '报告内容',
+  `trans_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '报告英文内容',
+  PRIMARY KEY (`order_id`) USING BTREE,
+  INDEX `idx_country_orderState`(`country`, `order_state`) USING BTREE,
+  INDEX `idx_u`(`created_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_package
+-- ----------------------------
+DROP TABLE IF EXISTS `av_package`;
+CREATE TABLE `av_package`  (
+  `package_id` bigint(20) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '套餐名称',
+  `is_system` int(255) NULL DEFAULT NULL COMMENT '0用户创建；1系统默认的',
+  `googs` json NULL COMMENT '内含的商品（服务）多条',
+  `unit_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '现在的单价',
+  `original_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '原价',
+  `conuntry` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '' COMMENT '所属国家',
+  `packge_type` int(11) NULL DEFAULT NULL COMMENT '10, 企业基本\n11, 企业高级\n20, 个人单个\n21,个人组合\n',
+  `update_time` datetime NULL DEFAULT NULL,
+  `create_by` bigint(20) NULL DEFAULT NULL,
+  `created_time` datetime NULL DEFAULT NULL,
+  `delete_flag` int(255) NULL DEFAULT NULL,
+  `product_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '套餐名称',
+  `supplementary_price` json NULL COMMENT '价格补充（主要针对越南的legalDoc）',
+  PRIMARY KEY (`package_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '套餐信息' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_product_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `av_product_dict`;
+CREATE TABLE `av_product_dict`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `product_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '产品id',
+  `count` int(200) NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  `created_time` datetime NULL DEFAULT NULL,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '用户',
+  `package_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '产品名称',
+  `country_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '国家',
+  `status` int(255) NULL DEFAULT NULL,
+  `isEnable` int(255) NULL DEFAULT NULL,
+  `isMock` int(255) NULL DEFAULT NULL,
+  `consumption_count` int(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `package_id`(`product_id`, `isMock`, `user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '套餐信息' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_report
+-- ----------------------------
+DROP TABLE IF EXISTS `av_report`;
+CREATE TABLE `av_report`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单号',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
+  `report_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告类型 all : zip zh_cn：中国PDF en：英文',
+  `report_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告URL',
+  `created_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `aml_order_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'aml 订单 number',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '报道生成PDF 存储路径表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_report_data_tag
+-- ----------------------------
+DROP TABLE IF EXISTS `av_report_data_tag`;
+CREATE TABLE `av_report_data_tag`  (
+  `id` int(22) NOT NULL AUTO_INCREMENT,
+  `order_id` bigint(20) NULL DEFAULT NULL COMMENT '订单id',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户id',
+  `country` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `report_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告标识：1：BaseReprot，2：AdvanceReport',
+  `is_ok` int(2) NULL DEFAULT NULL COMMENT '是否成功',
+  `module_json` json NULL COMMENT '订单的包含模块',
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for av_shopping_cart
+-- ----------------------------
+DROP TABLE IF EXISTS `av_shopping_cart`;
+CREATE TABLE `av_shopping_cart`  (
+  `id` bigint(20) NOT NULL,
+  `order_type` int(255) NULL DEFAULT NULL COMMENT '0企业核查；1个人核查',
+  `report_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '报告类型：基础报告，高级报告',
+  `company_name_English` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '查询的企业名称en',
+  `ubo_threshold` int(11) NULL DEFAULT NULL COMMENT 'ubo股东门槛百分比',
+  `ubo_layers` int(11) NULL DEFAULT NULL COMMENT 'ubo穿透层级',
+  `ubo_realtime_flag` tinyint(1) NULL DEFAULT NULL COMMENT '是否为实时数据标识',
+  `language` int(20) NULL DEFAULT NULL COMMENT '选择的语言',
+  `company_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '查询的企业编号',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '查询的企业名称',
+  `price` decimal(10, 2) NULL DEFAULT NULL COMMENT '总价',
+  `candidate_amount` int(11) NULL DEFAULT NULL COMMENT '候选人数量',
+  `package_id` bigint(20) NULL DEFAULT NULL COMMENT '商品id/套餐id(根据is_package确定）',
+  `is_package` int(255) NULL DEFAULT NULL COMMENT '1套餐；2单项服务',
+  `goods_name` text CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '套餐或商品名称',
+  `created_id` bigint(20) NULL DEFAULT NULL,
+  `delete_falg` int(11) NULL DEFAULT NULL,
+  `creted_time` datetime NULL DEFAULT NULL,
+  `remark` json NULL,
+  `company_name_og` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '查询的企业名称Og',
+  `country_id` int(3) NULL DEFAULT NULL COMMENT '国家id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_subscribe
+-- ----------------------------
+DROP TABLE IF EXISTS `av_subscribe`;
+CREATE TABLE `av_subscribe`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订阅邮箱',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订阅' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_translate
+-- ----------------------------
+DROP TABLE IF EXISTS `av_translate`;
+CREATE TABLE `av_translate`  (
+  `id` bigint(255) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `name_translate` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称英文',
+  `type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '语言类型：1：英文',
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `country` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '1：中国，1.1：台湾，1.2：香港，2日本',
+  `reg_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '注册号',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `index_number`(`reg_number`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '公司名称翻译表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_translate_hk
+-- ----------------------------
+DROP TABLE IF EXISTS `av_translate_hk`;
+CREATE TABLE `av_translate_hk`  (
+  `id` bigint(255) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `name_translate` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称英文',
+  `type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '语言类型：1：英文',
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `country` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '1：中国，1.1：台湾，1.2：香港，2日本',
+  `reg_number` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '注册号',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `name`(`name`) USING BTREE,
+  INDEX `tran_name`(`name_translate`(255)) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '公司名称翻译表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_ubo_order
+-- ----------------------------
+DROP TABLE IF EXISTS `av_ubo_order`;
+CREATE TABLE `av_ubo_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户ID',
+  `orderId` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'orderId',
+  `threshold` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'threshold',
+  `layers` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `realtimeFlag` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '是否为实时数据标识',
+  `cachePeriod` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '为否的时候时间',
+  `jurisdiction` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `orderNumber` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `price` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户需要支付的实际费用',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  `company_name_en` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `company_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `order_status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `explore_count` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '股东穿透数量',
+  `package_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `crossCountry` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `timeZone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3080 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '公司文件表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for av_user_extend
+-- ----------------------------
+DROP TABLE IF EXISTS `av_user_extend`;
+CREATE TABLE `av_user_extend`  (
+  `user_id` bigint(20) NOT NULL,
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称',
+  `county_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家代码',
+  `county_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家名称',
+  `time_zone` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '时区',
+  `company_reg_number` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司注册号',
+  `company_reg_address` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司注册地址',
+  `is_valid` int(11) NULL DEFAULT NULL COMMENT '是否已验证；0未验证；1已验证',
+  `last_modify_pwd` datetime NULL DEFAULT NULL COMMENT '最后修改密码时间',
+  `is_valid_email` int(11) NULL DEFAULT NULL COMMENT '邮箱是否已验证；0未验证；1已验证',
+  `email_checked_time` datetime NULL DEFAULT NULL COMMENT '邮箱验证时间',
+  `balance` float(10, 2) NULL DEFAULT NULL COMMENT '余额',
+  `remark` json NULL,
+  `plan_type` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '套餐类型：FreeTrial-免费试用，Enterprise-正式套餐',
+  `expriy_date` datetime NULL DEFAULT NULL COMMENT '过期时间',
+  `start_date` datetime NULL DEFAULT NULL COMMENT '套餐开始日期',
+  `cancel_date` datetime NULL DEFAULT NULL COMMENT '取消试用时间',
+  `trial_times` int(11) NULL DEFAULT 0 COMMENT '试用次数',
+  `frozen_balance` float(10, 2) NULL DEFAULT NULL COMMENT '已冻结的credits',
+  `balance_expriy_date` datetime NULL DEFAULT NULL COMMENT '可使用余额到期日',
+  PRIMARY KEY (`user_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户扩展信息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for bill_export
+-- ----------------------------
+DROP TABLE IF EXISTS `bill_export`;
+CREATE TABLE `bill_export`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '导出类型（1：Cost Statistics；2：Billing Statistics）',
+  `cycle` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '查询区间',
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件导出状态（1：completed；2：processing；3：failed）',
+  `file_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件地址',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '查询时间',
+  `conditions` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '查询条件',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for exchange_rate
+-- ----------------------------
+DROP TABLE IF EXISTS `exchange_rate`;
+CREATE TABLE `exchange_rate`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `currency` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '货币',
+  `jebruary_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '一月份汇率（美元汇率）',
+  `february_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '二月份汇率（美元汇率）',
+  `march_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '三月份汇率（美元汇率）',
+  `april_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '四月份汇率（美元汇率）',
+  `may_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '五月份汇率（美元汇率）',
+  `june_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '六月份汇率（美元汇率）',
+  `july_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '七月份汇率（美元汇率）',
+  `august_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '八月份汇率（美元汇率）',
+  `september_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '九月份汇率（美元汇率）',
+  `october_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '十月份汇率（美元汇率）',
+  `november_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '十一月份汇率（美元汇率）',
+  `december_rate` decimal(20, 8) NULL DEFAULT NULL COMMENT '十二月份汇率（美元汇率）',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign`;
+CREATE TABLE `marketing_campaign`  (
+  `marketing_campaign_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `marketing_campaign_guid` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `marketing_campaign_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `marketing_campaign_description` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `marketing_campaign_start_date` datetime NULL DEFAULT NULL,
+  `marketing_campaign_end_date` datetime NULL DEFAULT NULL,
+  `marketing_campaign_status` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_campaign_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign_email_template_bodies
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign_email_template_bodies`;
+CREATE TABLE `marketing_campaign_email_template_bodies`  (
+  `marketing_campaign_email_template_body_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `marketing_campaign_email_template_id` int(11) NOT NULL,
+  `email_body` json NULL,
+  `layout_style` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `layout_meta_data` json NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_campaign_email_template_body_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign_email_templates
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign_email_templates`;
+CREATE TABLE `marketing_campaign_email_templates`  (
+  `marketing_campaign_email_template_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `marketing_campaign_email_template_guid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `marketing_campaign_email_template_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `marketing_campaign_email_template_subject` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `email_header` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `email_footer` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `email_identifier` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `module_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `variables` json NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted_at` datetime NULL DEFAULT NULL,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_campaign_email_template_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign_goal
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign_goal`;
+CREATE TABLE `marketing_campaign_goal`  (
+  `marketing_campaign_goal_id` int(11) NOT NULL AUTO_INCREMENT,
+  `marketing_campaign_id` int(11) NOT NULL,
+  `marketing_campaign_goal_text` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `marketing_campaign_goal_identifier` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_campaign_goal_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign_goal_user
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign_goal_user`;
+CREATE TABLE `marketing_campaign_goal_user`  (
+  `marketing_campaign_goal_user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `marketing_campaign_goal_id` int(11) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`marketing_campaign_goal_user_id`) USING BTREE,
+  INDEX `marketing_campaign_goal_id`(`marketing_campaign_goal_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 130 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign_sample_report
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign_sample_report`;
+CREATE TABLE `marketing_campaign_sample_report`  (
+  `marketing_campaign_sample_report_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `order_id` bigint(20) UNSIGNED NULL DEFAULT NULL,
+  `marketing_campaign_id` bigint(20) UNSIGNED NOT NULL,
+  `enable_report_as_default` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'YES' COMMENT 'Values are YES and NO',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_campaign_sample_report_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign_searched_sample_report
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign_searched_sample_report`;
+CREATE TABLE `marketing_campaign_searched_sample_report`  (
+  `marketing_campaign_searched_sample_report_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `marketing_campaign_sample_report_id` bigint(20) UNSIGNED NULL DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_campaign_searched_sample_report_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_campaign_user
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_campaign_user`;
+CREATE TABLE `marketing_campaign_user`  (
+  `marketing_campaign_user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `marketing_campaign_user_guid` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `marketing_campaign_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NULL DEFAULT NULL,
+  `first_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `last_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `user_journey_status` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `crm_unique_id` varchar(65) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `crm_identifier` varchar(65) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `magic_link` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `sandbox_activation_token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `sandbox_magic_link` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `live_activation_token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `live_magic_link` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_campaign_user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_user_event_tracking
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_user_event_tracking`;
+CREATE TABLE `marketing_user_event_tracking`  (
+  `marketing_user_event_tracking_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'auto generated primary key',
+  `role_id` int(11) NULL DEFAULT NULL COMMENT 'We need the role_id when the event happened',
+  `marketing_campaign_id` int(11) NULL DEFAULT NULL,
+  `user_id` bigint(20) NULL DEFAULT NULL,
+  `marketing_event_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'a Enum string based to define which event got trigger, upper cased value need to store in DB',
+  `marketing_event_element_identifier` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'element identifier due to which this event was clicked, Enum string, to keep record of the elements',
+  `marketing_event_page_url` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'page visited - full url of the page, with params, query, etc.',
+  `marketing_event_data` json NULL COMMENT 'JSON field to store event related data.',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`marketing_user_event_tracking_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 802 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for marketing_user_sample_report
+-- ----------------------------
+DROP TABLE IF EXISTS `marketing_user_sample_report`;
+CREATE TABLE `marketing_user_sample_report`  (
+  `marketing_user_sample_report_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `is_active` tinyint(1) NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`marketing_user_sample_report_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for mock_company_data
+-- ----------------------------
+DROP TABLE IF EXISTS `mock_company_data`;
+CREATE TABLE `mock_company_data`  (
+  `company_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `order_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  PRIMARY KEY (`company_name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for mock_config
+-- ----------------------------
+DROP TABLE IF EXISTS `mock_config`;
+CREATE TABLE `mock_config`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `interface_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '接口名称',
+  `interface_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '接口类型',
+  `wait_time` bigint(255) NOT NULL COMMENT '等待时间，单位毫秒',
+  `data_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'data-form' COMMENT '请求数据类型data/form;json',
+  `business_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商业类型:KYC/KYB',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_id` int(11) NOT NULL DEFAULT -1 COMMENT '创建者ID -1 系统用户',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 191 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'mock 配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for mock_data
+-- ----------------------------
+DROP TABLE IF EXISTS `mock_data`;
+CREATE TABLE `mock_data`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `info_ids` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'mock_id 多个ID组合生成以逗号隔开',
+  `config_id` int(11) NOT NULL COMMENT 'mock_config 表ID',
+  `content` json NOT NULL COMMENT '内容',
+  `is_enable` int(2) NOT NULL COMMENT '是否生效：1生效；0失效',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_id` int(11) NOT NULL DEFAULT -1 COMMENT '创建者ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1587 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for mock_info
+-- ----------------------------
+DROP TABLE IF EXISTS `mock_info`;
+CREATE TABLE `mock_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `config_id` int(11) NOT NULL COMMENT 'mock_config 表ID',
+  `param_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数key',
+  `param_value` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数value',
+  `is_enable` int(2) NOT NULL DEFAULT 1 COMMENT '是否生效：1生效；0失效',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_id` int(11) NOT NULL DEFAULT -1 COMMENT '用户ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1646 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for order_cost_config
+-- ----------------------------
+DROP TABLE IF EXISTS `order_cost_config`;
+CREATE TABLE `order_cost_config`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源（1：api;2:portal）',
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型：（1：base;2:Ubo nodel）',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `interface_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口名称',
+  `template` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模板名称',
+  `api_country_id` int(11) NULL DEFAULT NULL COMMENT '关联api_country主键',
+  `api_info_id` int(11) NULL DEFAULT NULL COMMENT '关联api_info主键',
+  `api_template_config_id` int(11) NULL DEFAULT NULL COMMENT 'template配置id',
+  `cost` decimal(20, 4) NULL DEFAULT NULL COMMENT '成本',
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 242 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for order_price_config
+-- ----------------------------
+DROP TABLE IF EXISTS `order_price_config`;
+CREATE TABLE `order_price_config`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源（1：api;2:portal）',
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型：（1：base;2:Ubo nodel）',
+  `account` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '账号',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `interface_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口名称',
+  `template` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模板名称',
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '关联用户表主键',
+  `api_country_id` int(11) NULL DEFAULT NULL COMMENT '关联api_country主键',
+  `api_info_id` int(11) NULL DEFAULT NULL COMMENT '关联api_info主键',
+  `api_template_config_id` int(11) NULL DEFAULT NULL COMMENT 'template配置id',
+  `pricing_model` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '价格模型（1：Pag as you go；2：Minimum commitment）',
+  `contract_model` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '合同模型（1：Fixed price:2：quantity discount；3：offset；4:Commitment call；5:commitment amount）',
+  `promise_times` decimal(20, 4) NULL DEFAULT NULL COMMENT '承诺调用次数',
+  `price` decimal(20, 4) NULL DEFAULT NULL COMMENT '价格',
+  `currency` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '货币(1、AUD；2：USD；3：EUR；4：HKD)',
+  `government_collection` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '政府收集（1：YES;2No）',
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for order_price_config_extra
+-- ----------------------------
+DROP TABLE IF EXISTS `order_price_config_extra`;
+CREATE TABLE `order_price_config_extra`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_price_config_id` int(11) NULL DEFAULT NULL COMMENT '价格配置id',
+  `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家',
+  `interface_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口名称',
+  `template` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '模板名称',
+  `api_info_id` int(11) NULL DEFAULT NULL COMMENT '关联api_info主键',
+  `api_country_id` int(11) NULL DEFAULT NULL COMMENT '关联api_country主键',
+  `api_template_config_id` int(11) NULL DEFAULT NULL COMMENT '模板配置id',
+  `start_number` int(11) NULL DEFAULT NULL COMMENT '调用次数（开始区间）',
+  `end_number` int(11) NULL DEFAULT NULL COMMENT '调用次数（结束区间）',
+  `price` decimal(20, 4) NOT NULL COMMENT '价格',
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 150 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for order_statistics_record
+-- ----------------------------
+DROP TABLE IF EXISTS `order_statistics_record`;
+CREATE TABLE `order_statistics_record`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户id',
+  `api_id` int(11) NULL DEFAULT NULL COMMENT '接口id',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT '国家id',
+  `country` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家：HKG-香港',
+  `order_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单id',
+  `order_source` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单来源：portal，kybApi',
+  `order_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单类型：kyb，legalDoc',
+  `hit_cache_flag` tinyint(11) NULL DEFAULT NULL COMMENT '是否命中缓存：0-未命中，1-命中',
+  `auto_quality_flag` tinyint(11) NULL DEFAULT NULL COMMENT '是否自动质检通过：0-未自动通过，1-自动通过',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `IDX_OSR_CREATETIME`(`create_time`) USING BTREE,
+  INDEX `IDX_OSR_ORDERID`(`order_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2470 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单统计表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for rbac_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `rbac_permission`;
+CREATE TABLE `rbac_permission`  (
+  `permission_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `permission_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `permission_identifier` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`permission_id`) USING BTREE,
+  UNIQUE INDEX `permission_identifier`(`permission_identifier`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for rbac_role
+-- ----------------------------
+DROP TABLE IF EXISTS `rbac_role`;
+CREATE TABLE `rbac_role`  (
+  `role_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role_guid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `role_identifier` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `role_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `role_description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `role_is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`role_id`) USING BTREE,
+  UNIQUE INDEX `role_identifier`(`role_identifier`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for rbac_role_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `rbac_role_permission`;
+CREATE TABLE `rbac_role_permission`  (
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  `role_identifier` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `permission_id` bigint(20) UNSIGNED NOT NULL,
+  `permission_identifier` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE = InnoDB AUTO_INCREMENT = 114 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for rbac_user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `rbac_user_role`;
+CREATE TABLE `rbac_user_role`  (
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE = InnoDB AUTO_INCREMENT = 294 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sequelizemeta
+-- ----------------------------
+DROP TABLE IF EXISTS `sequelizemeta`;
+CREATE TABLE `sequelizemeta`  (
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`name`) USING BTREE,
+  UNIQUE INDEX `name`(`name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sys_dict_data
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dict_data`;
+CREATE TABLE `sys_dict_data`  (
+  `dict_code` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典编码',
+  `dict_sort` int(4) NULL DEFAULT 0 COMMENT '字典排序',
+  `dict_label` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典标签',
+  `dict_value` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典键值',
+  `dict_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '字典类型',
+  `css_class` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '样式属性（其他样式扩展）',
+  `list_class` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '表格回显样式',
+  `is_default` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'N' COMMENT '是否默认（Y是 N否）',
+  `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '状态（0正常 1停用）',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`dict_code`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 22341 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for sys_user
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user`;
+CREATE TABLE `sys_user`  (
+  `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `dept_id` bigint(20) NULL DEFAULT NULL COMMENT '部门ID',
+  `login_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '登录账号',
+  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '用户昵称',
+  `user_type` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '00' COMMENT '用户类型（00系统用户 01注册用户）\n00:个人；01：公司',
+  `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '用户邮箱',
+  `phonenumber` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '手机号码',
+  `sex` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '用户性别（0男 1女 2未知）',
+  `avatar` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '头像路径',
+  `password` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '密码',
+  `salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '盐加密',
+  `status` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '帐号状态（0正常 1停用）',
+  `del_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
+  `login_ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '最后登陆IP',
+  `login_date` datetime NULL DEFAULT NULL COMMENT '最后登陆时间',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `api_status` bigint(20) NULL DEFAULT NULL COMMENT '0：关闭 1：开启',
+  `api_token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户apitoken',
+  `api_sign` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户apitoken',
+  `mock_status` bigint(20) NULL DEFAULT NULL COMMENT '0：关闭 1：开启',
+  `contract_status` bigint(20) NULL DEFAULT 1 COMMENT '签约状态（1：Paid；2：Test）',
+  `login_times` bigint(20) NULL DEFAULT 0 COMMENT '登录次数',
+  `parent_user_id` bigint(20) NULL DEFAULT NULL COMMENT '父账号ID：空表示主账号，有值则为子账户',
+  `company_id` bigint(20) NULL DEFAULT NULL COMMENT '所属公司编号',
+  `api_call_threshold` bigint(10) NOT NULL DEFAULT 0 COMMENT 'API调用阈值',
+  `first_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名',
+  `last_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓',
+  `magic_link_activation_token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `account_access_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'password' COMMENT 'will use this field to determine which account type this user is right now, \"magic\" or \"password\".',
+  `web_push_notifcation_token` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'When user subscribes to browser notifcation, the token recieved from firebase will be stored here - 当用户订阅浏览器通知时，从 firebase 收到的令牌将存储在这里',
+  `enable_otp` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'YES',
+  PRIMARY KEY (`user_id`) USING BTREE,
+  UNIQUE INDEX `u_loginname`(`login_name`) USING BTREE,
+  UNIQUE INDEX `u_email`(`email`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1851896176866103420 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for sys_user_company_config
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_company_config`;
+CREATE TABLE `sys_user_company_config`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `company_id` bigint(20) NULL DEFAULT NULL COMMENT '用户所属公司ID',
+  `company_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户所属公司官方名称',
+  `company_number` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户所属公司官方编号',
+  `web_site` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司地址',
+  `default_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否默认配置：true-默认，false-非默认',
+  `report_logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '报告logo路径',
+  `disclamers_copywriter` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '免责声明文案',
+  `contactinfo_copywriter` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '联系方式文案',
+  `websource_copywriter` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '网站文案',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `default_back_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否默认背景图片',
+  `background_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '背景图片',
+  `logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司logo',
+  `smallLogo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司logo - 更小的版本 - 用于Portal收菜单',
+  `default_logo_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否默认公司logo',
+  `addubo_chn_basic_flag` tinyint(1) NULL DEFAULT 0 COMMENT '中国Basic是否新增UBO信息',
+  `desensitization_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否脱敏：0-不脱敏，1-脱敏',
+  `addubo_chn_api_basic_flag` tinyint(1) NULL DEFAULT 0 COMMENT '中国Basic是否新增UBO信息(API)',
+  `addubo_chn_api_advance_flag` tinyint(1) NULL DEFAULT 0 COMMENT '中国Advance是否新增UBO信息(API)',
+  `mark_img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司水印',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `company_id`(`company_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户所属公司配置信息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for sys_user_config
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_config`;
+CREATE TABLE `sys_user_config`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
+  `report_logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '报告logo路径',
+  `disclamers_copywriter` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '免责声明文案',
+  `contactinfo_copywriter` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '联系方式文案',
+  `websource_copywriter` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '网站文案',
+  `default_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否默认配置：true-默认，false-非默认',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `background_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '背景图片',
+  `default_back_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否默认背景图片',
+  `logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司logo',
+  `default_logo_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否默认公司logo',
+  `addubo_chn_basic_flag` tinyint(1) NULL DEFAULT 0 COMMENT '中国Basic是否新增UBO信息',
+  `desensitization_flag` tinyint(1) NULL DEFAULT 0 COMMENT '是否脱敏：0-不脱敏，1-脱敏',
+  `addubo_chn_api_basic_flag` tinyint(1) NULL DEFAULT 0 COMMENT '中国Basic是否新增UBO信息(API)',
+  `addubo_chn_api_advance_flag` tinyint(1) NULL DEFAULT 0 COMMENT '中国Advance是否新增UBO信息(API)',
+  `mark_img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '水印',
+  `default_mark_img` tinyint(1) NULL DEFAULT NULL COMMENT '是否默认水印图片',
+  `header_logo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '页眉logo',
+  `default_header_logo` tinyint(1) NULL DEFAULT NULL COMMENT '是否默认页眉logo',
+  `enterprise_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业集团编码',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `user_id`(`user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户配置信息表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sys_user_datasource_config
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_datasource_config`;
+CREATE TABLE `sys_user_datasource_config`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
+  `customer_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源客户ID',
+  `api_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源秘钥',
+  `customer_child_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据源客户子ID',
+  `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `user_id`(`user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户数据源配置信息表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sys_user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE `sys_user_role`  (
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+  PRIMARY KEY (`user_id`, `role_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_callback_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_callback_info`;
+CREATE TABLE `t_api_callback_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `retry_times` int(11) NOT NULL DEFAULT 3 COMMENT '重试次数',
+  `retry_time_interval` int(11) NOT NULL DEFAULT 10 COMMENT '重试时间间隔,单位秒',
+  `expect_timeout` int(11) NOT NULL DEFAULT 60 COMMENT '期望超时时间,单位秒',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API回调配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_cm_order_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_cm_order_info`;
+CREATE TABLE `t_api_cm_order_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '监控订单唯一id',
+  `input` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '入参公司编号',
+  `language` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '语言',
+  `country_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '国家三字码',
+  `check_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '监控类型：cmBasic、cmLite',
+  `interval_days` int(11) NOT NULL COMMENT '监控周期',
+  `start_date` datetime NOT NULL COMMENT '监控开始时间',
+  `expiry_date` datetime NULL DEFAULT NULL COMMENT '监控到期时间',
+  `notify_url` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '监控结果回调url',
+  `user_id` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户ID',
+  `status` int(11) NULL DEFAULT NULL COMMENT '任务状态',
+  `last_exec_time` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '最近执行时间',
+  `next_exec_time` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '下次执行时间',
+  `create_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '订单创建时间',
+  `modify_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '订单更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 472 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API监控订单信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_api_cm_order_mock_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_cm_order_mock_info`;
+CREATE TABLE `t_api_cm_order_mock_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单唯一id',
+  `input` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '入参公司编号',
+  `language` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '语言',
+  `country_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '国家三字码',
+  `check_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '监控类型：cmBasic、cmLite',
+  `type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据类型：create、update、view、callback',
+  `order_index` int(11) NULL DEFAULT NULL COMMENT '排序下标',
+  `callback_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '返回结果',
+  `sync_flag` int(11) NOT NULL COMMENT '是否异步：0-异步，1-同步',
+  `create_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '订单创建时间',
+  `modify_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '订单更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API监控订单沙箱数据信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_api_cm_order_record_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_cm_order_record_info`;
+CREATE TABLE `t_api_cm_order_record_info`  (
+  `result_ori` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '订单原始数据',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '监控任务id',
+  `order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单编号',
+  `exec_status` int(11) NOT NULL COMMENT '执行状态',
+  `result` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '监控结果',
+  `fail_reason` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '失败原因',
+  `master_order_flag` int(11) NOT NULL COMMENT '是否主任务订单',
+  `create_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '订单创建时间',
+  `modify_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '订单更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 811 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API监控订单执行记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_api_data_source_error_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_data_source_error_info`;
+CREATE TABLE `t_api_data_source_error_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_api_id` int(11) NOT NULL COMMENT '数据源APIID',
+  `error_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '错误码',
+  `error_message` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '错误码描述',
+  `error_suggest` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '错误操作建议',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据源接口错误码配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_data_source_extend_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_data_source_extend_info`;
+CREATE TABLE `t_api_data_source_extend_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_api_id` int(11) NOT NULL COMMENT '数据源APIID',
+  `is_encrypt` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否加密，0不加密;1加密',
+  `retry_times` int(11) NOT NULL DEFAULT 0 COMMENT '重试次数',
+  `retry_time_interval` int(11) NOT NULL DEFAULT 0 COMMENT '重试时间间隔,单位秒',
+  `expect_timeout` int(11) NOT NULL DEFAULT 0 COMMENT '期望超时时间,单位秒',
+  `resp_example` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '返回样例',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 77 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据源接口扩展配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_data_source_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_data_source_info`;
+CREATE TABLE `t_api_data_source_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据源API唯一编码',
+  `source_id` int(11) NOT NULL COMMENT '数据源ID',
+  `country_id` int(11) NOT NULL COMMENT '国家ID',
+  `url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据源API访问路径',
+  `method` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据源API请求方式GET/POST',
+  `is_enable` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否有效，0无效;1有效',
+  `api_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据源API描述',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `create_user` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `modify_user` bigint(20) NULL DEFAULT NULL COMMENT '修改者',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 113 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据源接口配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_data_source_relation_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_data_source_relation_info`;
+CREATE TABLE `t_api_data_source_relation_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `source_api_id` int(11) NOT NULL COMMENT '数据源APIID',
+  `convert_class` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '对象转换方法类',
+  `is_enable_backup_ds` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否使用备用数据源，0不使用;1使用',
+  `backup_source_api_id` int(11) NOT NULL COMMENT '备用数据源APIID',
+  `backup_convert_class` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '备用数据源对象转换方法类',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 154 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API与数据源关系配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_data_source_req_param_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_data_source_req_param_info`;
+CREATE TABLE `t_api_data_source_req_param_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_api_id` int(11) NOT NULL COMMENT '数据源APIID',
+  `param_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数名称',
+  `param_desc` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数描述',
+  `param_location` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'body' COMMENT '请求参数位置query/body',
+  `param_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'String' COMMENT '参数类型String/int',
+  `is_required` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否必填，0非必填;1必填',
+  `default_value` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '默认值，不为空的请求数据源必须带上该参数并且值为默认值',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 178 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据源接口请求参数配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_data_source_req_record_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_data_source_req_record_info`;
+CREATE TABLE `t_api_data_source_req_record_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单编号',
+  `source_id` int(11) NOT NULL COMMENT '数据源id',
+  `source_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据源名称',
+  `req_url` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求url',
+  `req_param_json` varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求参数体',
+  `resp_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '响应体',
+  `req_time` datetime NOT NULL COMMENT '请求时间',
+  `resp_time` datetime NOT NULL COMMENT '响应时间',
+  PRIMARY KEY (`id`, `req_time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API调用数据源记录表' ROW_FORMAT = DYNAMIC PARTITION BY RANGE (YEAR(req_time) * 100 + MONTH(req_time))
+PARTITIONS 34
+(PARTITION `p202403` VALUES LESS THAN (202403) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202404` VALUES LESS THAN (202404) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202405` VALUES LESS THAN (202405) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202406` VALUES LESS THAN (202406) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202407` VALUES LESS THAN (202407) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202408` VALUES LESS THAN (202408) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202409` VALUES LESS THAN (202409) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202410` VALUES LESS THAN (202410) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202411` VALUES LESS THAN (202411) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202412` VALUES LESS THAN (202412) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202501` VALUES LESS THAN (202501) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202502` VALUES LESS THAN (202502) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202503` VALUES LESS THAN (202503) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202504` VALUES LESS THAN (202504) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202505` VALUES LESS THAN (202505) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202506` VALUES LESS THAN (202506) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202507` VALUES LESS THAN (202507) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202508` VALUES LESS THAN (202508) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202509` VALUES LESS THAN (202509) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202510` VALUES LESS THAN (202510) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202511` VALUES LESS THAN (202511) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202512` VALUES LESS THAN (202512) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202601` VALUES LESS THAN (202601) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202602` VALUES LESS THAN (202602) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202603` VALUES LESS THAN (202603) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202604` VALUES LESS THAN (202604) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202605` VALUES LESS THAN (202605) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202606` VALUES LESS THAN (202606) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202607` VALUES LESS THAN (202607) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202608` VALUES LESS THAN (202608) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202609` VALUES LESS THAN (202609) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202610` VALUES LESS THAN (202610) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202611` VALUES LESS THAN (202611) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202612` VALUES LESS THAN (202612) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 )
+;
+
+-- ----------------------------
+-- Table structure for t_api_data_source_resp_param_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_data_source_resp_param_info`;
+CREATE TABLE `t_api_data_source_resp_param_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_api_id` int(11) NOT NULL COMMENT '数据源APIID',
+  `param_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数名称',
+  `param_desc` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数描述',
+  `param_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'String' COMMENT '参数类型String/int',
+  `parent_id` int(11) NOT NULL DEFAULT 0 COMMENT '请求参数上一级参数ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 267 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据源接口返回参数配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_error_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_error_info`;
+CREATE TABLE `t_api_error_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `error_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '错误码',
+  `error_message` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '错误码描述',
+  `error_suggest` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '错误操作建议t',
+  `source_error_id` int(11) NOT NULL COMMENT '数据源错误码ID',
+  `backup_source_error_id` int(11) NULL DEFAULT NULL COMMENT '备用数据源错误码ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API错误码配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_extend_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_extend_info`;
+CREATE TABLE `t_api_extend_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `is_encrypt` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否加密，0不加密;1加密',
+  `retry_times` int(11) NOT NULL DEFAULT 0 COMMENT '重试次数',
+  `retry_time_interval` int(11) NOT NULL DEFAULT 0 COMMENT '重试时间间隔,单位秒',
+  `expect_timeout` int(11) NOT NULL DEFAULT 0 COMMENT '期望超时时间,单位秒',
+  `resp_example` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '返回样例',
+  `resp_support_translate` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否支持翻译，0不支持;1支持',
+  `resp_source_language` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '源数据语言',
+  `resp_target_language` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '目标数据语言',
+  `is_resp_cache` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否对结果缓存,0不缓存;1缓存',
+  `is_config_data_source_mapp` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否配置数据源映射,不配置;1配置',
+  `is_sand_box_data_from_mongo` tinyint(4) NOT NULL DEFAULT 1 COMMENT '沙箱数据是否查询mongo,0不查询;1查询',
+  `is_record_order` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否生成订单,0不生成;1生成',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 235 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API扩展配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_info`;
+CREATE TABLE `t_api_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'API唯一编码',
+  `country_id` int(11) NOT NULL COMMENT '国家ID',
+  `api_generation_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'api类型（KYB_API:Know Your Business;KYC_API:Know Your Customer;REGISTER_API：注册API）',
+  `is_package` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否API套餐，0不是;1是',
+  `method` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'API请求方式GET/POST',
+  `is_enable` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否有效，0无效;1有效',
+  `api_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'API描述',
+  `api_route` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'API路由地址',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `create_user` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `modify_user` bigint(20) NULL DEFAULT NULL COMMENT '修改者',
+  `connect_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'sync' COMMENT '接口连接类型sync/async',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 201 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API基本配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_match_score_config
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_match_score_config`;
+CREATE TABLE `t_api_match_score_config`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `country_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国家三字码',
+  `type` int(11) NULL DEFAULT 1 COMMENT '字段类型 1-短字段 2-长字段',
+  `match_threshold` int(11) NULL DEFAULT NULL COMMENT 'match分数',
+  `partial_match_threshold` int(11) NULL DEFAULT NULL COMMENT 'partialMatch分数',
+  `levenshtein_percent` double(11, 2) NULL DEFAULT NULL COMMENT 'levenshtein百分比',
+  `jaro_winkler_percent` double(11, 2) NULL DEFAULT NULL COMMENT 'jaroWinkler百分比',
+  `cosine_similarity_percent` double(11, 2) NULL DEFAULT NULL COMMENT 'cosineSimilarity百分比',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'match字段匹配得分参数配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_api_mock_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_mock_info`;
+CREATE TABLE `t_api_mock_info`  (
+  `modify_user` bigint(11) NULL DEFAULT NULL COMMENT '修改者',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `create_user` bigint(11) NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `is_enable` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否有效，0无效;1有效',
+  `resp_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '银行名称',
+  `req_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '银行代码/行号类型(SWIFT/CNAPS)',
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API MOCK配置表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_api_order_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_order_info`;
+CREATE TABLE `t_api_order_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单唯一id',
+  `country_id` int(11) NOT NULL COMMENT '国家id',
+  `order_status` smallint(1) NOT NULL COMMENT '订单状态',
+  `is_effective` tinyint(4) NOT NULL DEFAULT 0 COMMENT '订单是否有效0:有效1:无效',
+  `order_source` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'API' COMMENT '订单来源/api/portal/..',
+  `order_price` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0.00' COMMENT '订单价格',
+  `api_id` int(11) NOT NULL COMMENT 'API ID',
+  `req_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求id',
+  `trace_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求事务id',
+  `is_mock_req` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否mock订单，0否1是',
+  `header_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '请求头内容',
+  `req_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '请求参数内容',
+  `resp_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `trans_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `notify_url` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调地址',
+  `notify_status` smallint(1) NOT NULL DEFAULT 0 COMMENT '回调状态',
+  `create_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `create_time` datetime NOT NULL COMMENT '订单创建时间',
+  `modify_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `modify_time` datetime NOT NULL COMMENT '订单更新时间',
+  `data_is_from_result_cache` tinyint(4) NOT NULL DEFAULT 0 COMMENT '数据是否来自API结果缓存，0否;1是',
+  `data_from_order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '数据来源订单唯一id',
+  `data_is_from_datasource_cache` tinyint(4) NOT NULL DEFAULT 0 COMMENT '数据是否来自数据源缓存，0否;1是',
+  `parent_order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '父订单id',
+  PRIMARY KEY (`id`, `create_time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1499109686 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API订单信息' ROW_FORMAT = DYNAMIC PARTITION BY RANGE (YEAR(create_time) * 100 + MONTH(create_time))
+PARTITIONS 34
+(PARTITION `p202403` VALUES LESS THAN (202403) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202404` VALUES LESS THAN (202404) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202405` VALUES LESS THAN (202405) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202406` VALUES LESS THAN (202406) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202407` VALUES LESS THAN (202407) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202408` VALUES LESS THAN (202408) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202409` VALUES LESS THAN (202409) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202410` VALUES LESS THAN (202410) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202411` VALUES LESS THAN (202411) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202412` VALUES LESS THAN (202412) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202501` VALUES LESS THAN (202501) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202502` VALUES LESS THAN (202502) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202503` VALUES LESS THAN (202503) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202504` VALUES LESS THAN (202504) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202505` VALUES LESS THAN (202505) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202506` VALUES LESS THAN (202506) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202507` VALUES LESS THAN (202507) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202508` VALUES LESS THAN (202508) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202509` VALUES LESS THAN (202509) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202510` VALUES LESS THAN (202510) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202511` VALUES LESS THAN (202511) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202512` VALUES LESS THAN (202512) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202601` VALUES LESS THAN (202601) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202602` VALUES LESS THAN (202602) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202603` VALUES LESS THAN (202603) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202604` VALUES LESS THAN (202604) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202605` VALUES LESS THAN (202605) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202606` VALUES LESS THAN (202606) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202607` VALUES LESS THAN (202607) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202608` VALUES LESS THAN (202608) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202609` VALUES LESS THAN (202609) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202610` VALUES LESS THAN (202610) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202611` VALUES LESS THAN (202611) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 ,
+PARTITION `p202612` VALUES LESS THAN (202612) ENGINE = InnoDB MAX_ROWS = 0 MIN_ROWS = 0 )
+;
+
+-- ----------------------------
+-- Table structure for t_api_order_info_callback
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_order_info_callback`;
+CREATE TABLE `t_api_order_info_callback`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '订单唯一id',
+  `uni_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求唯一标识',
+  `header_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '请求头内容',
+  `req_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '请求参数内容',
+  `callback_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `notify_url` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回调地址',
+  `callback_status` smallint(1) NOT NULL DEFAULT 0 COMMENT '回调状态',
+  `create_user` bigint(20) NOT NULL COMMENT '订单创建人',
+  `create_time` datetime NOT NULL COMMENT '订单创建时间',
+  `modify_user` bigint(20) NULL DEFAULT NULL COMMENT '订单创建人',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '订单更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '请求回调表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_package_mapping_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_package_mapping_info`;
+CREATE TABLE `t_api_package_mapping_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_api_id` int(11) NOT NULL COMMENT 'API套餐ID',
+  `api_id` int(11) NOT NULL COMMENT 'API模板所映射的相关API唯一编码',
+  `api_priority` smallint(1) NOT NULL DEFAULT 0 COMMENT 'API优先级，默认都是0，优先级相同',
+  `depend_api_id` int(11) NOT NULL COMMENT '依赖的API',
+  `package_req_param_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'API模板请求参数名称',
+  `api_req_param_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '相关API请求参数名称',
+  `data_source_priority` smallint(6) NULL DEFAULT 0 COMMENT '调用数据源的优先级，根据优先级确定调用先后顺序',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 121 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API模板关系配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_req_param_convert_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_req_param_convert_info`;
+CREATE TABLE `t_api_req_param_convert_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `req_param_id` int(11) NOT NULL COMMENT '请求参数id',
+  `convert_method` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '参数转换方法',
+  `from_value` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '需要转换的值',
+  `to_value` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '转换之后的值',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API请求参数校验配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_req_param_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_req_param_info`;
+CREATE TABLE `t_api_req_param_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `param_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数名称',
+  `param_desc` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数描述',
+  `param_location` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'body' COMMENT '请求参数位置query/body',
+  `param_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'String' COMMENT '参数类型String/int',
+  `is_required` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否必填，0非必填;1必填',
+  `source_req_id` int(11) NOT NULL COMMENT '数据源请求参数ID',
+  `backup_source_req_id` int(11) NULL DEFAULT NULL COMMENT '备用数据源请求参数ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 556 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API请求参数配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_req_param_validate_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_req_param_validate_info`;
+CREATE TABLE `t_api_req_param_validate_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `req_param_id` int(11) NOT NULL COMMENT '请求参数id',
+  `validate_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '参数校验类型',
+  `validate_value` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数校验值，例如正则表达式，日期格式等等',
+  `sort_number` int(2) NOT NULL COMMENT '验证顺序',
+  `error_code` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '验证失败，返回错误码',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 494 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API请求参数校验配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_resp_param_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_resp_param_info`;
+CREATE TABLE `t_api_resp_param_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `api_id` int(11) NOT NULL COMMENT 'APIID',
+  `param_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数名称',
+  `param_desc` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '请求参数描述',
+  `param_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'String' COMMENT '参数类型String/int',
+  `parent_id` int(11) NOT NULL DEFAULT 0 COMMENT '请求参数上一级参数ID',
+  `source_resp_id` int(11) NOT NULL COMMENT '数据源响应参数ID',
+  `backup_source_resp_id` int(11) NULL DEFAULT NULL COMMENT '备用数据源相应参数ID',
+  `is_translate` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否翻译，0不翻译;1翻译',
+  `translate_method` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '翻译方式GOOGLE/PINYIN/LOCAL',
+  `is_convert` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否数据转换，0不转换;1转换',
+  `convert_condition` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '转换方式，自定义',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 156 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'API返回参数配置' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_api_user_product_limit
+-- ----------------------------
+DROP TABLE IF EXISTS `t_api_user_product_limit`;
+CREATE TABLE `t_api_user_product_limit`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` bigint(20) NOT NULL COMMENT '	\r\n	\r\n关联sys_user_info',
+  `product_id` bigint(20) NOT NULL COMMENT '	\r\n关联api_product_dict',
+  `api_id` int(20) NOT NULL COMMENT '关联t_api_info',
+  `api_threshold` bigint(20) NULL DEFAULT NULL COMMENT 'API调用阈值',
+  `api_rate` int(11) NULL DEFAULT NULL COMMENT '速率限制，每天调用多少次',
+  `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `delete_flag` tinyint(4) NOT NULL COMMENT '是否删除 0正常 1删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_uid`(`user_id`) USING BTREE,
+  INDEX `idx_pid`(`product_id`) USING BTREE,
+  INDEX `idx_aid`(`api_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户产品api限制表，表中数据体现用户对于product、api的限制，不在表中表示没有限制。' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_av_in_app_notification
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_in_app_notification`;
+CREATE TABLE `t_av_in_app_notification`  (
+  `in_app_notification_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `status` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `notification_state` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `notification_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `subheading` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `message` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `additional_content` json NULL,
+  `created_by` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'AUTO',
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`in_app_notification_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 265 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_av_order
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_order`;
+CREATE TABLE `t_av_order`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `order_id` bigint(20) NULL DEFAULT NULL COMMENT 'order_id :Internal Relationship',
+  `order_number` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Order number used by the customer',
+  `country_id` int(11) NOT NULL COMMENT '国家id',
+  `language` int(20) NULL DEFAULT NULL COMMENT '0-english 1-original',
+  `company_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司编号',
+  `company_name_og` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称Og',
+  `company_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公司名称En',
+  `total_price` decimal(10, 2) NOT NULL COMMENT '总价',
+  `order_state` int(11) NOT NULL COMMENT '0未支付；1进行中；2已完成；9已取消',
+  `pay_method` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '支付方式',
+  `payment_time` datetime NULL DEFAULT NULL COMMENT '支付时间',
+  `user_id` bigint(20) NOT NULL COMMENT 'sys_user:user_id',
+  `enterprise_id` int(11) NULL DEFAULT NULL COMMENT '企业集团id',
+  `create_time` datetime NOT NULL COMMENT 'create order time',
+  `update_time` datetime NULL DEFAULT NULL COMMENT 'update order time',
+  `cart_batch_id` bigint(20) NULL DEFAULT NULL COMMENT 'Cart Batch Id',
+  `is_mock` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否沙箱订单',
+  `aml_report_url` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '该订单aml总报告下载地址',
+  `is_child` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否子订单，0否1是',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_u`(`user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1856638366050971651 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'av订单表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_av_order_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_order_detail`;
+CREATE TABLE `t_av_order_detail`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `order_id` bigint(20) NULL DEFAULT NULL COMMENT '订单id',
+  `api_order_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'API订单号',
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '报告内容',
+  `trans_content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '报告英文内容',
+  `legal_doc_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件id',
+  `ubo_threshold` int(11) NULL DEFAULT NULL COMMENT '股东门槛百分比',
+  `ubo_layers` int(11) NULL DEFAULT NULL COMMENT '未知字段（请补充说明）',
+  `ubo_realtime_flag` tinyint(1) NULL DEFAULT NULL COMMENT '是否为实时数据标识',
+  `ubo_explore_count` int(11) NULL DEFAULT NULL COMMENT '股东穿透数量',
+  `ubo_result_message` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'ubo查询结果',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `report_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '报告类型',
+  `report_status` smallint(6) NULL DEFAULT 1 COMMENT '报告状态',
+  `report_url_en` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'en报告下载地址',
+  `report_url_og` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'og报告下载地址',
+  `report_config` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '该报告的查询配置',
+  `child_order_id` bigint(20) NULL DEFAULT NULL COMMENT '子订单号',
+  `call_back_time` datetime NULL DEFAULT NULL COMMENT '回调时间(异步获取到报告数据的时间)',
+  `report_update_flag` smallint(6) NOT NULL DEFAULT 0 COMMENT '-1(有新报告，该报告已为历史),0(只有一份报告或者新报告已读),1(有历史报告，此为新报告且未读)',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 26326 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'av订单详情表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_av_package_config_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_package_config_info`;
+CREATE TABLE `t_av_package_config_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '套餐编码',
+  `package_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '套餐名称',
+  `package_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '套餐描述',
+  `package_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '套餐类型',
+  `is_using` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否正在使用，0否1是',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '套餐配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_av_package_report_mapping_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_package_report_mapping_info`;
+CREATE TABLE `t_av_package_report_mapping_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_id` int(11) NOT NULL COMMENT '套餐id',
+  `report_id` int(11) NOT NULL COMMENT '报告id',
+  `report_level` smallint(6) NOT NULL DEFAULT 0 COMMENT '是否支持增加aml报告，0不支持;1支持',
+  `is_add_aml` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否支持增加aml报告，0不支持;1支持',
+  `is_add_monitor` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否支持增加monitor报告，0不支持;1支持',
+  `monitor_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '如果支持monitor，那么需要指定monitorType，monitor check type(cmLite/cmBasic)',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '报告模块关系表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_av_preview_label_config
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_preview_label_config`;
+CREATE TABLE `t_av_preview_label_config`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `style` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '前端标签类型\r\ntext:\r\ntable:',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '前端显示字段名',
+  `title_en` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '前端使用字段名',
+  `field` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字段名',
+  `sort` int(11) NULL DEFAULT NULL COMMENT '排序',
+  `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父级标签id',
+  `is_list` tinyint(4) NULL DEFAULT 0,
+  `create_by` bigint(20) NULL DEFAULT NULL COMMENT '创建者ID',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `delete_flag` tinyint(4) NULL DEFAULT 0 COMMENT '是否删除（0正常，1删除）',
+  `report_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报告类型',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4867 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '标签配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_av_report_config_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_report_config_info`;
+CREATE TABLE `t_av_report_config_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报告编码',
+  `report_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报告名称',
+  `report_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '报告描述',
+  `report_sample` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '报告概览',
+  `report_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报告类型',
+  `unit_price` decimal(10, 2) NOT NULL COMMENT '套餐折扣价',
+  `original_price` decimal(10, 2) NOT NULL COMMENT '原价',
+  `folding_icon` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '折叠图标',
+  `folding_copy` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '折叠文案',
+  `expand_icon` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '展开图标',
+  `expand_copy` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '展开文案',
+  `act_on_country` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '适用于哪些国家，为空则没有限制，但还是需要结合不适用的国家得出最后结果',
+  `not_act_on_country` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '不适用于哪些国家，为空则没有限制，但还是需要结合不适用的国家得出最后结果',
+  `is_using` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否正在使用，0否1是',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '报告配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_av_report_module_config_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_report_module_config_info`;
+CREATE TABLE `t_av_report_module_config_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `model_category` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报告模块目录',
+  `module_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报告模块名称',
+  `module_desc` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '报告模块描述',
+  `sort_number` int(11) NOT NULL COMMENT '顺序',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '报告模块配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_av_report_module_mapping_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_av_report_module_mapping_info`;
+CREATE TABLE `t_av_report_module_mapping_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_id` int(11) NOT NULL COMMENT '报告id',
+  `module_id` int(11) NOT NULL COMMENT '模块id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '报告模块关系表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_bank_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_bank_info`;
+CREATE TABLE `t_bank_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bank_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '银行代码/行号',
+  `bank_code_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '银行代码/行号类型(SWIFT/CNAPS)',
+  `bank_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '银行名称',
+  `bank_en_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '银行名称英文',
+  `country_id` int(11) NOT NULL COMMENT '国家ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 103193 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '银行信息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_country_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_country_info`;
+CREATE TABLE `t_country_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `en_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '英文名称',
+  `cn_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '中文名称',
+  `iso_two` varchar(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'ISO2',
+  `iso_three` varchar(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'ISO3',
+  `source_language` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '官方语言',
+  `language_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '语言类型 single/double',
+  `national_flag_url` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '国旗地址',
+  `is_using` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否正在使用，0否1是',
+  `unified_search_from_es` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'unified search是否从ES查询，0否1是',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 343 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '国家信息表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_enterprise_group_api_auth_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_enterprise_group_api_auth_info`;
+CREATE TABLE `t_enterprise_group_api_auth_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `enterprise_id` int(11) NOT NULL COMMENT '企业集团id',
+  `api_id` int(11) NOT NULL COMMENT 'API id',
+  `is_open_sandbox` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否开启该API sandbox权限',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_user` bigint(11) NOT NULL COMMENT '创建者',
+  `modify_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_user` bigint(11) NOT NULL COMMENT '修改者',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `enterprise_id`(`enterprise_id`, `api_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '企业集团API权限表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_enterprise_group_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_enterprise_group_info`;
+CREATE TABLE `t_enterprise_group_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `enterprise_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '企业集团编码',
+  `enterprise_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '企业集团名称',
+  `email_domain` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '企业集团邮箱域',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_user` bigint(11) NOT NULL COMMENT '创建者',
+  `modify_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_user` bigint(11) NOT NULL COMMENT '修改者',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `enterprise_code`(`enterprise_code`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '企业集团表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_enterprise_group_role_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_enterprise_group_role_info`;
+CREATE TABLE `t_enterprise_group_role_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色编码',
+  `role_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
+  `view_permissions` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '视图权限',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_user` bigint(11) NOT NULL COMMENT '创建者',
+  `modify_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_user` bigint(11) NOT NULL COMMENT '修改者',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `role_code`(`role_code`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户角色表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_enterprise_group_user_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_enterprise_group_user_info`;
+CREATE TABLE `t_enterprise_group_user_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `enterprise_id` int(11) NOT NULL COMMENT '企业集团id',
+  `user_id` bigint(11) NULL DEFAULT NULL COMMENT '用户id',
+  `user_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户姓名',
+  `role_code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色编码',
+  `invitation_link` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邀请链接',
+  `user_email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户邮箱',
+  `user_status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户状态(DEL/DEACTIVATE/ACTIVATE)',
+  `is_logged_in` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否已登陆过',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_user` bigint(11) NOT NULL COMMENT '创建者',
+  `modify_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_user` bigint(11) NOT NULL COMMENT '修改者',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 56 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '企业集团用户表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_job_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_job_info`;
+CREATE TABLE `t_job_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务名称',
+  `job_class` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务执行的类名',
+  `job_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务类型（AUTO：自动调度，MANUAL：手动触发）',
+  `cron_ex` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'cron表达式',
+  `job_group` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务分组',
+  `job_status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务调度状态（Ready：启动，Paused：暂停）',
+  `create_user` bigint(20) NOT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `modify_user` bigint(20) NOT NULL COMMENT '创建人',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务执行记录信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_job_log_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_job_log_info`;
+CREATE TABLE `t_job_log_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_id` int(11) NOT NULL COMMENT '任务ID',
+  `instance_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务触发实例ID',
+  `status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '执行状态',
+  `exception` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '异常信息',
+  `start_time` datetime NOT NULL COMMENT '开始时间',
+  `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
+  `create_user` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `modify_user` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `modify_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 206 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务执行记录信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_legaldoc_docid_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_legaldoc_docid_info`;
+CREATE TABLE `t_legaldoc_docid_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doc_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件id',
+  `doc_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `country_id` int(11) NOT NULL COMMENT '国家ID',
+  `search_req_content` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '查询参数',
+  `doc_mark` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件记号，默认国家是default，泰国存的是docType，香港存的是1，default/2，hk_legaldoc_search的结果',
+  `file_url` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '沙箱文件地址',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `doc_id`(`doc_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7728 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'legaldoc生成docid记录表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_operate_log_info
+-- ----------------------------
+DROP TABLE IF EXISTS `t_operate_log_info`;
+CREATE TABLE `t_operate_log_info`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `module_code` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '操作模块',
+  `operate_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '操作类型(ADD/DEL/MODIFY)',
+  `operate_user` bigint(11) NOT NULL COMMENT '操作人',
+  `from_ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '操作机器ip',
+  `operate_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '操作内容',
+  `operate_time` datetime NOT NULL COMMENT '操作时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 344 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作记录表' ROW_FORMAT = DYNAMIC;
+
+SET FOREIGN_KEY_CHECKS = 1;
